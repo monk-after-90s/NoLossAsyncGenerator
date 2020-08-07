@@ -27,6 +27,14 @@ class NoLossAsyncGenerator:
         finally:
             self.q.task_done()
 
+    async def wait_empty(self):
+        '''
+        等待下一次空数据的机会
+
+        :return:
+        '''
+        await self.q.join()
+
 
 # def NoLossAsyncGenerator(raw_async_generator):
 #     async def no_data_loss_async_generator_wrapper(raw_async_generator):
