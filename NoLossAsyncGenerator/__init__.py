@@ -1,3 +1,3 @@
-from .NoLossAsyncGenerator import no_data_loss_async_generator_decorator, no_data_loss_async_generator
+from .NoLossAsyncGenerator import no_data_loss_async_generator_decorator, NoLossAsyncGenerator
 
-__all__ = ['no_data_loss_async_generator', 'no_data_loss_async_generator_decorator']
+__all__ = ['NoLossAsyncGenerator', 'no_data_loss_async_generator_decorator']
