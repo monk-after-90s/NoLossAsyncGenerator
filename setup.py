@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="NoLossAsyncGenerator",
-    version="2.2",
+    version="2.3",
     author="Antas",
     author_email="",
     description="Asynchronous generator without any data loss in case that handling one message costs too much time.",
