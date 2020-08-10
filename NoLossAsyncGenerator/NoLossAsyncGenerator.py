@@ -2,13 +2,14 @@
 Asynchronous generator without any data loss in case that handling one message costs too much time.
 '''
 import asyncio
+from ensureTaskCanceled.ensureTaskCanceled import ensureTaskCanceled
 
 
 class NoLossAsyncGenerator:
     def __init__(self, raw_async_generator):
         self.q = asyncio.Queue()
         self.raw_async_generator = raw_async_generator
-        asyncio.create_task(self._activate())
+        self._activate_task = asyncio.create_task(self._activate())
 
     async def _activate(self):
         async for msg in self.raw_async_generator:
@@ -34,6 +35,10 @@ class NoLossAsyncGenerator:
         :return:
         '''
         await self.q.join()
+
+    async def close(self):
+        await self.wait_empty()
+        await ensureTaskCanceled(self._activate_task)
 
 
 # def NoLossAsyncGenerator(raw_async_generator):
