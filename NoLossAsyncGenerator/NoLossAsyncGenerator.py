@@ -6,14 +6,15 @@ from ensureTaskCanceled.ensureTaskCanceled import ensureTaskCanceled
 
 
 class NoLossAsyncGenerator:
-    def __init__(self, raw_async_generator):
+    def __init__(self, raw_async_iterater=None):
         self.q = asyncio.Queue()
-        self.raw_async_generator = raw_async_generator
+        self.raw_async_iterater = raw_async_iterater
         self._activate_task = asyncio.create_task(self._activate())
 
     async def _activate(self):
-        async for msg in self.raw_async_generator:
-            self.q.put_nowait(msg)
+        if self.raw_async_iterater:
+            async for msg in self.raw_async_iterater:
+                self.q.put_nowait(msg)
 
     def __aiter__(self):
         return self
@@ -41,22 +42,22 @@ class NoLossAsyncGenerator:
         await ensureTaskCanceled(self._activate_task)
 
 
-# def NoLossAsyncGenerator(raw_async_generator):
-#     async def no_data_loss_async_generator_wrapper(raw_async_generator):
+# def NoLossAsyncGenerator(raw_async_iterater):
+#     async def no_data_loss_async_generator_wrapper(raw_async_iterater):
 #         q = asyncio.Queue()
 #
-#         async def yield2q(raw_async_generator, q: asyncio.Queue):
-#             async for msg in raw_async_generator:
+#         async def yield2q(raw_async_iterater, q: asyncio.Queue):
+#             async for msg in raw_async_iterater:
 #                 q.put_nowait(msg)
 #
-#         asyncio.create_task(yield2q(raw_async_generator, q))
+#         asyncio.create_task(yield2q(raw_async_iterater, q))
 #         while True:
 #             msg = await q.get()
 #             # generator.left = q.qsize()
 #             # generator.__dict__['left'] = q.qsize()
 #             yield msg
 #
-#     generator = no_data_loss_async_generator_wrapper(raw_async_generator)
+#     generator = no_data_loss_async_generator_wrapper(raw_async_iterater)
 #     return generator
 
 
