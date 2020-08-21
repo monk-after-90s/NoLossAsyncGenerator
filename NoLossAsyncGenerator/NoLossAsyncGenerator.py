@@ -25,9 +25,12 @@ class NoLossAsyncGenerator:
 
     async def __anext__(self):
         try:
-            return await self.q.get()
-        finally:
+            next_item = await self.q.get()
+        except:
+            pass
+        else:
             self.q.task_done()
+            return next_item
 
     async def wait_empty(self):
         '''
